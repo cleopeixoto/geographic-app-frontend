@@ -11,17 +11,15 @@
         <thead>
             <tr>
                 <th>
-                <span>Code #</span>
-                <font-awesome-icon icon="sort" :class="{'current-sort': currentSortField === 'code'}" @click="sortBy('code')" />
-                <!-- <i class="fa fa-sort" [ngClass]="{'current-sort': currentSortField === 'accountNumber'}" (mouseup)="sortBy('accountNumber')"></i> -->
+                  <span>Code</span>
+                  <font-awesome-icon icon="sort" class="fa-icon" :class="{'current-sort': currentSortField === 'code'}" @click="sortBy('code')" />
                 </th>
-                <th colspan="2">
-                <span>Name</span>
-                <!-- <i class="fa fa-sort" [ngClass]="{'current-sort': currentSortField === 'name'}" (mouseup)="sortBy('name')"></i> -->
-                <font-awesome-icon icon="sort" :class="{'current-sort': currentSortField === 'name'}" @click="sortBy('name')" />
+                <th>
+                  <span>Name</span>
+                  <font-awesome-icon icon="sort" class="fa-icon" :class="{'current-sort': currentSortField === 'name'}" @click="sortBy('name')" />
                 </th>
-                <th colspan="2" class="actions">
-                <span>Actions</span>
+                <th class="actions">
+                  <span>Actions</span>
                 </th>
             </tr>
         </thead>
@@ -30,15 +28,12 @@
                 <td>{{substation.code}}</td>
                 <td>{{substation.name}}</td>
                 <div class="actions">
-                <!-- <td (click)="goToSubstationDetails(substation._id)" class="action-icon view"> -->
-                <td @click="goToSubstationDetails(substation._id)" class="action-icon view">
-                    <font-awesome-icon icon="eye" />
-                    <!-- <i class="fa fa-eye"></i> -->
-                </td>
-                <td @click="confirmDelete(substation._id)" class="action-icon delete">
-                    <font-awesome-icon icon="trash" />
-                    <!-- <i class="fa fa-trash"></i> -->
-                </td>
+                  <td @click="goToSubstationDetails(substation._id)" class="action-icon view">
+                    <font-awesome-icon icon="eye" class="fa-icon" />
+                  </td>
+                  <td @click="confirmDelete(substation._id)" class="action-icon delete">
+                    <font-awesome-icon icon="trash" class="fa-icon" />
+                  </td>
                 </div>
             </tr>
         </tbody>
@@ -108,85 +103,85 @@ export default {
 <style lang="scss" scoped>
 
 .substation-container {
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 
-    .substation-table {
-        overflow-x: scroll;
-        max-height: 60vh;
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.17);
-        border-radius: 5px;
+  .substation-table {
+    overflow-y: auto;
+    max-height: 60vh;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.17);
+    border-radius: 5px;
 
-        table {
-        border-collapse: collapse;
-        width: 100%;
+    table {
+      border-collapse: collapse;
+      width: 100%;
 
-        th, td {
-            border: none;
-            text-align: start;
-            padding: 10px;
+      th, td {
+        border: none;
+        text-align: start;
+        padding: 10px;
+      }
+
+      thead {
+        position: sticky;
+        top: 0;
+        background-color: #e1183f !important;
+        color: white;
+
+        th {
+          font-weight: 500;
+
+          .fa-icon {
+            margin-left: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+
+            &:hover {
+              color: white;
+            }
+          }
+
+          .current-sort {
+              color: white;
+          }
         }
+      }
 
-        thead {
-            position: sticky;
-            top: 0;
-            background-color: #e1183f !important;
-            color: white;
-
-            th {
-            font-weight: 500;
-
-            .fa {
-                margin-left: 20px;
-                color: rgba(255, 255, 255, 0.5);
-                cursor: pointer;
-
-                &:hover {
-                color: white;
-                }
-            }
-
-            .current-sort {
-                color: white;
-            }
-            }
-        }
-
-        tbody {
-            tr {
-            &:nth-child(odd) {
-                background-color: rgba(0, 0, 0, 0.05);
-            }
-            }
-
-            .actions {
-            .action-icon {
-                i {
-                font-size: 20px;
-                cursor: pointer;
-
-                &:hover {
-                    color: #e1183f;
-                }
-                }
-            }
-            }
+      tbody {
+        tr {
+          &:nth-child(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+          }
         }
 
         .actions {
-            display: flex;
-            justify-content: center;
-        }
-        }
-    }
+          .action-icon {
+            .fa-icon {
+              font-size: 15px;
+              cursor: pointer;
 
-    .new-btn {
-        align-self: self-end;
-        cursor: pointer;
-        font-weight: 500;
-        text-transform: uppercase;
-        padding: 10px;
+              &:hover {
+                  color: #e1183f;
+              }
+            }
+          }
+        }
+      }
+
+      .actions {
+        display: flex;
+        justify-content: center;
+      }
     }
+  }
+
+  .new-btn {
+    align-self: self-end;
+    cursor: pointer;
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 10px;
+  }
 }
 </style>
