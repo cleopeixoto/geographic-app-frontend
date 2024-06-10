@@ -55,6 +55,7 @@ export default {
   },
   data () {
     return {
+      currentSortField: 'name'
     }
   },
   computed: {
@@ -68,17 +69,16 @@ export default {
      * @param field Given field to sort based on
      */
     sortBy (field) {
+      if (this.currentSortField === field) {
+        this.SubstationStore.substations.reverse()
+        return
+      }
+
       this.currentSortField = field
 
-      this.SubstationStore.substations.sort((substationA, substationB) => {
-        let keyA = substationA[field]
-        let keyB = substationB[field]
-
-        if (typeof keyA === 'string') keyA = keyA.toUpperCase()
-        if (typeof keyB === 'string') keyB = keyB.toUpperCase()
-
-        if (keyA > keyB) return 1
-        if (keyA < keyB) return -1
+      this.SubstationStore.substations = this.SubstationStore.substations.sort((substationA, substationB) => {
+        if (substationA[field] > substationB[field]) return 1
+        if (substationA[field] < substationB[field]) return -1
         return 0 // equals
       })
     },
