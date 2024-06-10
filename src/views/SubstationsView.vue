@@ -1,10 +1,12 @@
 <template>
 <div class="substation-container">
-    <router-link to="/substation/new">
-    <!-- <button id="myButton" class="foo bar">Go!</button> -->
-    <button class="btn primary-btn new-btn">New Sub-Station</button>
-    </router-link>
-    <!-- <button class="btn primary-btn new-btn" routerLink="/substation/new">New Substation</button> -->
+    <!-- <router-link to="/substation/new" class="router-link-btn">
+      <button class="btn primary-btn new-btn" @click="navigateTo('/substation/new')">New Sub-Station</button>
+    </router-link> -->
+    <button class="btn primary-btn new-btn" @click="goToNewSubstationView()">New Sub-Station</button>
+    <!-- <button class="btn primary-btn new-btn">
+      <router-link to="/substation/new">New substation</router-link>
+    </button> -->
 
     <div class="substation-table">
     <table class="table table-hover">
@@ -82,19 +84,26 @@ export default {
     },
 
     /**
-         * Delete a substation
-         * @param id Substation id
-         */
+     * Delete a substation
+     * @param id Substation id
+     */
     confirmDelete (id) {
       this.substationService.deleteSubstation(id)
     },
 
     /**
-         * Go to Substation Details page
-         * @param substationId The ID of the substation
-         */
+     * Go to Substation Details page
+     * @param substationId The ID of the substation
+     */
     goToSubstationDetails (substationId) {
-      this.router.navigate([`substation/${substationId}/details`]).then()
+      this.$router.push({ path: `substation/${substationId}/details` })
+    },
+
+    /**
+     * Go to New Substation page
+     */
+    goToNewSubstationView () {
+      this.$router.push({ path: '/substation/new' })
     }
   }
 }
