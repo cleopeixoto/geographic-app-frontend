@@ -18,20 +18,20 @@
           <div class="input-group">
             <span>Code:</span>
             <input class="input-field" v-model.trim="currentSubstation.code" maxlength="3">
-            <span class="field-error" v-if="triggerSubmit && !currentSubstation.code">Code is required</span>
-            <span class="field-error" v-if="hasDuplicatedCode">There is already a sub station with this code</span>
+            <span class="error-field" v-if="triggerSubmit && !currentSubstation.code">Code is required</span>
+            <span class="error-field" v-if="hasDuplicatedCode">There is already a sub station with this code</span>
           </div>
 
           <div class="input-group">
             <span>Name:</span>
             <input class="input-field" v-model.trim="currentSubstation.name" maxlength="100">
-            <span class="field-error" v-if="triggerSubmit && !currentSubstation.name">Name is required</span>
+            <span class="error-field" v-if="triggerSubmit && !currentSubstation.name">Name is required</span>
           </div>
 
           <div class="input-group">
             <span>Latitude:</span>
             <input class="input-field" type="number" v-model.number="currentSubstation.latitude" maxlength="15">
-            <span class="field-error" v-if="triggerSubmit && !currentSubstation.latitude">Latitude is required</span>
+            <span class="error-field" v-if="triggerSubmit && !currentSubstation.latitude">Latitude is required</span>
           </div>
 
           <div class="input-group">
@@ -110,6 +110,7 @@ export default {
         title: '',
         subtitle: ''
       },
+      triggerSubmit: false,
       changed: false
     }
   },
@@ -162,6 +163,8 @@ export default {
      * Submit to create or update a SubStation
      */
     async onSubmit () {
+      this.triggerSubmit = true
+
       try {
         this.notification.isSuccess = true
         if (this.currentMode === this.SubstationStore.pageModes.CREATE) {
@@ -184,6 +187,8 @@ export default {
             this.$router.push({ path: '/home' })
           }, 5000)
         }
+
+        this.triggerSubmit = false
       }
     },
 
