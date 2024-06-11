@@ -62,7 +62,8 @@ export default {
       useSubstationStore
     )
   },
-  mounted () {
+  async mounted () {
+    await this.SubstationStore.getSubstations()
     this.sortBy('name')
   },
   methods: {

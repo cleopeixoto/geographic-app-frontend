@@ -117,9 +117,17 @@ export default {
     ...mapStores(
       useSubstationStore
     ),
+
+    /**
+     * Check all required fields
+     */
     hasEmptyRequiredFields () {
       return !this.currentSubstation.code || !this.currentSubstation.name || !this.currentSubstation.latitude
     },
+
+    /**
+     * Verify if is there a duplicated code
+     */
     hasDuplicatedCode () {
       let hasDuplicated = false
 
@@ -150,6 +158,9 @@ export default {
       this.$router.push({ path: '/home' })
     },
 
+    /**
+     * Submit to create or update a SubStation
+     */
     async onSubmit () {
       try {
         this.notification.isSuccess = true

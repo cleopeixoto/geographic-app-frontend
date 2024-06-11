@@ -5,7 +5,14 @@ const defaultRoute = '/home'
 const routes = [
   {
     path: '/',
-    redirect: 'home'
+    redirect: 'login'
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: function () {
+      return import('../views/LoginView.vue')
+    }
   },
   {
     path: `${defaultRoute}`,

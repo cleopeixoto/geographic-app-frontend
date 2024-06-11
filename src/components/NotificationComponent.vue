@@ -19,6 +19,10 @@ export default {
   name: 'NotificationComponent',
   props: ['isSuccess', 'title', 'subtitle'],
   methods: {
+
+    /**
+     * Emit to close notification
+     */
     onClose () {
       this.$emit('close')
     }

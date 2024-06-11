@@ -91,12 +91,20 @@ export default {
     await this.NetworkStore.getRelatedNetworks(this.substationId)
   },
   methods: {
+
+    /**
+     * Submit to create a Network
+     */
     async onSubmit () {
       await this.NetworkStore.createNetwork({
         subStationId: this.substationId,
         ...this.currentNetwork
       })
     },
+
+    /**
+     * Delete a Network
+     */
     async confirmDelete (id) {
       await this.NetworkStore.deleteNetwork(id)
     }
