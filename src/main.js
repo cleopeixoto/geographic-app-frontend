@@ -9,13 +9,14 @@ import store from './store'
 import './styles.scss'
 
 // Icons
-import { faSort, faEye, faTrash, faRotateLeft, faEdit, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
+import { faSort, faEye, faTrash, faRotateLeft, faEdit, faFloppyDisk, faClose } from '@fortawesome/free-solid-svg-icons'
 library.add(faSort)
 library.add(faEye)
 library.add(faTrash)
 library.add(faRotateLeft)
 library.add(faEdit)
 library.add(faFloppyDisk)
+library.add(faClose)
 
 const pinia = createPinia()
 

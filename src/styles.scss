@@ -101,6 +101,10 @@ body {
         .current-sort {
             color: white;
         }
+
+        &.actions {
+          margin-right: 25px;
+        }
       }
     }
 
@@ -127,7 +131,7 @@ body {
 
     .actions {
       display: flex;
-      justify-content: center;
+      justify-content: end;
     }
   }
 }

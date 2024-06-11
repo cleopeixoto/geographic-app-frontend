@@ -1,4 +1,11 @@
 <template>
+  <notification-component v-if="notification.show"
+    :is-success="notification.isSuccess"
+    :title="notification.title"
+    :subtitle="notification.subtitle"
+    @close="closeNotification()"
+  />
+
   <div class="page-container">
     <div class="substation-details-container">
       <div class="substation-card generic-card card">
@@ -12,6 +19,7 @@
             <span>Code:</span>
             <input class="input-field" v-model.trim="currentSubstation.code" maxlength="3">
             <span class="field-error" v-if="triggerSubmit && !currentSubstation.code">Code is required</span>
+            <span class="field-error" v-if="hasDuplicatedCode">There is already a sub station with this code</span>
           </div>
 
           <div class="input-group">
@@ -32,13 +40,13 @@
           </div>
         </div>
 
-        <div class="maps-viewer">
+        <div class="maps-viewer" v-if="currentMode === SubstationStore.pageModes.READ">
           <iframe
-            width="600"
-            height="450"
+            width="100%"
+            height="300"
             style="border:0"
             loading="lazy"
-            :src="`https://www.google.com/maps/search/?api=1&query=${currentSubstation.latitude},${currentSubstation.longitude}`">
+            :src="`https://maps.google.com/maps?q=${currentSubstation.latitude},${currentSubstation.longitude}&output=embed`">
           </iframe>
         </div>
 
@@ -50,13 +58,13 @@
             </button>
 
             <button type="submit" class="btn primary-btn" v-if="currentMode === SubstationStore.pageModes.CREATE"
-              :disabled="hasEmptyRequiredFields"
+              :disabled="hasEmptyRequiredFields || hasDuplicatedCode"
               @click="onSubmit()"
             >
               <span>Create</span>
             </button>
             <button type="submit" class="btn primary-btn" v-if="currentMode === SubstationStore.pageModes.UPDATE"
-              :disabled="hasEmptyRequiredFields || (currentMode === SubstationStore.pageModes.UPDATE)"
+              :disabled="hasEmptyRequiredFields || hasDuplicatedCode"
               @click="onSubmit()"
             >
               <font-awesome-icon icon="floppy-disk" class="fa-icon" />
@@ -77,13 +85,14 @@
 import { mapStores } from 'pinia'
 import useSubstationStore from '@/store/SubstationStore'
 
-import { useRoute } from 'vue-router'
 import NetworksTable from '@/components/NetworksTable.vue'
+import NotificationComponent from '@/components/NotificationComponent.vue'
 
 export default {
   name: 'SubstationDetailView',
   components: {
-    NetworksTable
+    NetworksTable,
+    NotificationComponent
   },
   data () {
     return {
@@ -96,9 +105,12 @@ export default {
       },
       currentMode: null,
       relatedNetworks: [],
-      customErrors: {},
-      displayNotification: false,
-      route: useRoute()
+      notification: {
+        show: false,
+        title: '',
+        subtitle: ''
+      },
+      changed: false
     }
   },
   computed: {
@@ -107,6 +119,21 @@ export default {
     ),
     hasEmptyRequiredFields () {
       return !this.currentSubstation.code || !this.currentSubstation.name || !this.currentSubstation.latitude
+    },
+    hasDuplicatedCode () {
+      let hasDuplicated = false
+
+      this.SubstationStore.substations.forEach((substation) => {
+        if (hasDuplicated && this.currentMode === this.SubstationStore.pageModes.CREATE && substation.code === this.currentSubstation.code) {
+          hasDuplicated = true
+        } else if (hasDuplicated && this.currentMode === this.SubstationStore.pageModes.UPDATE &&
+          this.currentSubstation.code === substation.code && this.currentSubstation.code !== this.SubstationStore.selectedSubstation.code
+        ) {
+          hasDuplicated = true
+        }
+      })
+
+      return hasDuplicated
     }
   },
   async mounted () {
@@ -124,9 +151,35 @@ export default {
     },
 
     async onSubmit () {
-      // add success message
-      await this.SubstationStore.createSubstation(this.currentSubstation)
-      this.$router.push({ path: '/home' })
+      try {
+        this.notification.isSuccess = true
+        if (this.currentMode === this.SubstationStore.pageModes.CREATE) {
+          await this.SubstationStore.createSubstation(this.currentSubstation)
+          this.notification.title = 'Substation successfully created'
+        } else if (this.currentMode === this.SubstationStore.pageModes.UPDATE) {
+          await this.SubstationStore.editSubstation(this.currentSubstationId, this.currentSubstation)
+          this.notification.title = 'Substation successfully edited'
+        }
+        this.currentMode = this.SubstationStore.pageModes.READ
+      } catch (error) {
+        this.notification.isSuccess = false
+        this.notification.title = 'Oops. Error'
+        this.notification.subtitle = 'We could not perform your request this time. Please, review form and try again.'
+      } finally {
+        this.notification.show = true
+
+        if (this.notification.isSuccess) {
+          setTimeout(() => {
+            this.$router.push({ path: '/home' })
+          }, 5000)
+        }
+      }
+    },
+
+    closeNotification () {
+      this.notification.show = false
+      this.notification.title = ''
+      this.notification.subtitle = ''
     }
   }
 }
@@ -144,36 +197,12 @@ export default {
     flex-direction: column;
     align-items: center;
   }
+
+  .disable-editing {
+    .input-field {
+      pointer-events: none;
+      background-color: $gray5;
+    }
+  }
 }
-
-// .form-control:focus{
-//   box-shadow: none;
-// }
-
-// ::ng-deep {
-//   .disable-editing {
-//     .mdc-line-ripple {
-//       display: none;
-//     }
-//   }
-
-//   .mat-mdc-form-field {
-//     padding: 0 !important;
-//   }
-
-//   .mat-mdc-text-field-wrapper,
-//   .mat-mdc-form-field-hint-wrapper,
-//   .mat-mdc-form-field-error-wrapper {
-//     padding: 0 0 0 5px !important;
-//   }
-
-//   .mat-mdc-form-field-flex {
-//     margin-top: 25px !important;
-//     padding-bottom: 6px;
-//   }
-
-//   .mat-mdc-floating-label {
-//     margin-top: 5px !important;
-//   }
-// }
 </style>

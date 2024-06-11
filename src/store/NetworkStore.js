@@ -22,6 +22,8 @@ const useNetworkStore = defineStore('Network', {
     async deleteNetwork (id) {
       if (!id) return
       await deleteNetwork(id)
+
+      this.networks = this.networks.filter((network) => network._id !== id)
     }
   }
 })
