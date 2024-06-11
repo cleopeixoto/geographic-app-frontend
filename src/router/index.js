@@ -13,6 +13,27 @@ const routes = [
     component: function () {
       return import('../views/SubstationsView.vue')
     }
+  },
+  {
+    path: '/substation/new',
+    name: 'New Substation',
+    component: function () {
+      return import('../views/SubstationDetailView.vue')
+    }
+  },
+  {
+    path: '/substation/:id/details',
+    name: 'Substation Detail',
+    component: function () {
+      return import('../views/SubstationDetailView.vue')
+    }
+  },
+  {
+    path: '/substation/:id/edit',
+    name: 'Substation Edit',
+    component: function () {
+      return import('../views/SubstationDetailView.vue')
+    }
   }
 ]
 

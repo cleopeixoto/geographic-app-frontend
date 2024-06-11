@@ -62,59 +62,169 @@ body {
   border: 2px solid $gray5;
 }
 
+// Table styles
+.generic-table {
+  overflow-y: auto;
+  max-height: 60vh;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.17);
+  border-radius: 5px;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th, td {
+      border: none;
+      text-align: start;
+      padding: 10px;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      background-color: #e1183f !important;
+      color: white;
+
+      th {
+        font-weight: 500;
+
+        .fa-icon {
+          margin-left: 20px;
+          color: rgba(255, 255, 255, 0.5);
+          cursor: pointer;
+
+          &:hover {
+            color: white;
+          }
+        }
+
+        .current-sort {
+            color: white;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(odd) {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
+
+      .actions {
+        .action-icon {
+          .fa-icon {
+            font-size: 15px;
+            cursor: pointer;
+
+            &:hover {
+                color: #e1183f;
+            }
+          }
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
 
 // Form styles
-.generic-form {
+.generic-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  height: fit-content;
+
+  @media screen and (min-width: 768px) {
+    max-width: 500px;
+  }
+
+  .form {
+    width: 97%;
+  }
+
+  .form-title {
+    margin: 0 0 20px;
+    font-size: 20px;
+  }
+
   .input-group {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     margin: 15px 0;
   
-    mat-form-field {
+    input {
       width: 100%;
     }
-  }
-  
-  .form-footer {
-    display: flex;
-    flex-direction: column;
-  
-    .new-client-account-message {
-      margin: 0 0 10px;
+
+    .input-field {
+      height: 30px;
+      border-radius: 4px;
+      border: 1px solid $gray2;
       font-size: 14px;
-    }
+      color: $gray1;
+      letter-spacing: 0.5px;
+      padding: 2px 7px;
   
-    .buttons {
-      margin: 20px 0;
-      display: flex;
-      justify-content: end;
-      gap: 20px;
-  
-      .btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-  
-        span {
-          font-size: 15px;
-          text-transform: uppercase;
-        }
-  
-        .fa {
-          font-size: 15px;
-          font-weight: bold;
-        }
+      &:focus, :focus-visible {
+        outline: none !important;
+        border-color: $dark-red;
+        opacity: 50%;
       }
     }
   }
   
-  mat-error {
+  .error-field {
     color: $dark-red;
     opacity: 90%;
-  }
-  
-  mat-hint, mat-error {
     font-size: 12px;
   }
+}
+
+.form-footer {
+  display: flex;
+  flex-direction: column;
+
+  .buttons {
+    margin: 20px 0;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+
+    .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      span {
+        font-size: 15px;
+        text-transform: uppercase;
+      }
+
+      .fa-icon {
+        font-size: 15px;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

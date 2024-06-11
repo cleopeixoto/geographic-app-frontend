@@ -1,45 +1,44 @@
 <template>
 <div class="substation-container">
-    <!-- <router-link to="/substation/new" class="router-link-btn">
-      <button class="btn primary-btn new-btn" @click="navigateTo('/substation/new')">New Sub-Station</button>
-    </router-link> -->
     <button class="btn primary-btn new-btn" @click="goToNewSubstationView()">New Sub-Station</button>
-    <!-- <button class="btn primary-btn new-btn">
-      <router-link to="/substation/new">New substation</router-link>
-    </button> -->
 
-    <div class="substation-table">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>
-                  <span>Code</span>
-                  <font-awesome-icon icon="sort" class="fa-icon" :class="{'current-sort': currentSortField === 'code'}" @click="sortBy('code')" />
-                </th>
-                <th>
-                  <span>Name</span>
-                  <font-awesome-icon icon="sort" class="fa-icon" :class="{'current-sort': currentSortField === 'name'}" @click="sortBy('name')" />
-                </th>
-                <th class="actions">
-                  <span>Actions</span>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="substation in SubstationStore.substations" :key="substation._id">
-                <td>{{substation.code}}</td>
-                <td>{{substation.name}}</td>
-                <div class="actions">
-                  <td @click="goToSubstationDetails(substation._id)" class="action-icon view">
-                    <font-awesome-icon icon="eye" class="fa-icon" />
-                  </td>
-                  <td @click="confirmDelete(substation._id)" class="action-icon delete">
-                    <font-awesome-icon icon="trash" class="fa-icon" />
-                  </td>
-                </div>
-            </tr>
-        </tbody>
-    </table>
+    <div class="substation-table generic-table">
+      <table class="table table-hover">
+          <thead>
+              <tr>
+                  <th>
+                    <span>Code</span>
+                    <font-awesome-icon icon="sort" class="fa-icon" :class="{'current-sort': currentSortField === 'code'}" @click="sortBy('code')" />
+                  </th>
+                  <th>
+                    <span>Name</span>
+                    <font-awesome-icon icon="sort" class="fa-icon" :class="{'current-sort': currentSortField === 'name'}" @click="sortBy('name')" />
+                  </th>
+                  <th class="actions">
+                    <span>Actions</span>
+                  </th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr v-for="substation in SubstationStore.substations" :key="substation._id">
+                  <td>{{substation.code}}</td>
+                  <td>{{substation.name}}</td>
+                  <div class="actions">
+                    <td @click="goToSubstationDetails(substation._id, 'details')" class="action-icon view">
+                      <font-awesome-icon icon="eye" class="fa-icon" />
+                    </td>
+
+                    <td @click="goToSubstationDetails(substation._id, 'edit')" class="action-icon view">
+                      <font-awesome-icon icon="edit" class="fa-icon" />
+                    </td>
+
+                    <td @click="confirmDelete(substation._id)" class="action-icon delete">
+                      <font-awesome-icon icon="trash" class="fa-icon" />
+                    </td>
+                  </div>
+              </tr>
+          </tbody>
+      </table>
     </div>
 </div>
 </template>
@@ -55,13 +54,16 @@ export default {
   },
   data () {
     return {
-      currentSortField: 'name'
+      currentSortField: ''
     }
   },
   computed: {
     ...mapStores(
       useSubstationStore
     )
+  },
+  mounted () {
+    this.sortBy('name')
   },
   methods: {
     /**
@@ -77,8 +79,8 @@ export default {
       this.currentSortField = field
 
       this.SubstationStore.substations = this.SubstationStore.substations.sort((substationA, substationB) => {
-        if (substationA[field] > substationB[field]) return 1
-        if (substationA[field] < substationB[field]) return -1
+        if (substationA[field].toUpperCase() > substationB[field].toUpperCase()) return 1
+        if (substationA[field].toUpperCase() < substationB[field].toUpperCase()) return -1
         return 0 // equals
       })
     },
@@ -87,16 +89,16 @@ export default {
      * Delete a substation
      * @param id Substation id
      */
-    confirmDelete (id) {
-      this.substationService.deleteSubstation(id)
+    async confirmDelete (id) {
+      await this.SubstationStore.deleteSubstation(id)
     },
 
     /**
      * Go to Substation Details page
      * @param substationId The ID of the substation
      */
-    goToSubstationDetails (substationId) {
-      this.$router.push({ path: `substation/${substationId}/details` })
+    goToSubstationDetails (substationId, action) {
+      this.$router.push({ path: `substation/${substationId}/${action}` })
     },
 
     /**
@@ -115,75 +117,6 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 50px;
-
-  .substation-table {
-    overflow-y: auto;
-    max-height: 60vh;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.17);
-    border-radius: 5px;
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-
-      th, td {
-        border: none;
-        text-align: start;
-        padding: 10px;
-      }
-
-      thead {
-        position: sticky;
-        top: 0;
-        background-color: #e1183f !important;
-        color: white;
-
-        th {
-          font-weight: 500;
-
-          .fa-icon {
-            margin-left: 20px;
-            color: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-
-            &:hover {
-              color: white;
-            }
-          }
-
-          .current-sort {
-              color: white;
-          }
-        }
-      }
-
-      tbody {
-        tr {
-          &:nth-child(odd) {
-            background-color: rgba(0, 0, 0, 0.05);
-          }
-        }
-
-        .actions {
-          .action-icon {
-            .fa-icon {
-              font-size: 15px;
-              cursor: pointer;
-
-              &:hover {
-                  color: #e1183f;
-              }
-            }
-          }
-        }
-      }
-
-      .actions {
-        display: flex;
-        justify-content: center;
-      }
-    }
-  }
 
   .new-btn {
     align-self: self-end;
